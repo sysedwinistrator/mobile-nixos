@@ -71,61 +71,48 @@ in
     };
   };
 
-  config = mkIf (config.mobile.boot.stage-1.enable) (mkMerge [
-    {
-      assertions = [
-        {
-          # When the Mobile NixOS stage-1 is in use, valid configurations are either:
-          #   - GUI enabled (luks or not, don't care).
-          #   - No LUKS.
-          assertion = cfg.enable || (luks.devices == {} && !luks.forceLuksSupportInInitrd);
-          message = "With the Mobile NixOS stage-1, the boot GUI needs to be enabled to use LUKS.";
-        }
-      ];
-    }
-    (mkIf cfg.enable {
-      mobile.boot.stage-1.contents = [
-        {
-          object = "${pkgs.mobile-nixos.stage-1.boot-error}/libexec/boot-error.mrb";
-          symlink = "/applets/boot-error.mrb";
-        }
-        {
-          object = "${pkgs.mobile-nixos.stage-1.boot-splash}/libexec/boot-splash.mrb";
-          symlink = "/applets/boot-splash.mrb";
-        }
-        {
-          object = "${pkgs.mobile-nixos.stage-1.boot-recovery-menu}/libexec/boot-recovery-menu.mrb";
-          symlink = "/applets/boot-selection.mrb";
-        }
-        {
-          object = "${minimalX11Config}";
-          symlink = "/etc/X11";
-        }
-        {
-          object = cfg.logo;
-          symlink = "/etc/logo.svg";
-        }
-      ];
+  config = mkIf cfg.enable {
+    mobile.boot.stage-1.contents = [
+      {
+        object = "${pkgs.mobile-nixos.stage-1.boot-error}/libexec/boot-error.mrb";
+        symlink = "/applets/boot-error.mrb";
+      }
+      {
+        object = "${pkgs.mobile-nixos.stage-1.boot-splash}/libexec/boot-splash.mrb";
+        symlink = "/applets/boot-splash.mrb";
+      }
+      {
+        object = "${pkgs.mobile-nixos.stage-1.boot-recovery-menu}/libexec/boot-recovery-menu.mrb";
+        symlink = "/applets/boot-selection.mrb";
+      }
+      {
+        object = "${minimalX11Config}";
+        symlink = "/etc/X11";
+      }
+      {
+        object = cfg.logo;
+        symlink = "/etc/logo.svg";
+      }
+    ];
 
-      mobile.boot.stage-1.environment = {
-        XKB_CONFIG_ROOT = "/etc/X11/xkb";
-        XLOCALEDIR = "/etc/X11/locale";
-      };
-      mobile.boot.stage-1.bootConfig = mkMerge [
-        (mkIf (cfg.waitForDevices.enable) {
-          quirks = {
-            wait_for_devices_delay = cfg.waitForDevices.delay;
-          };
-        })
-        {
-          splash = {
-            theme = mkDefault "night";
-            background = mkDefault "0xFF000000";
-            foreground = mkDefault "0xFFFFFFFF";
-            useBGRT    = mkDefault true;
-          };
-        }
-      ];
-    })
-  ]);
+    mobile.boot.stage-1.environment = {
+      XKB_CONFIG_ROOT = "/etc/X11/xkb";
+      XLOCALEDIR = "/etc/X11/locale";
+    };
+    mobile.boot.stage-1.bootConfig = mkMerge [
+      (mkIf (cfg.waitForDevices.enable) {
+        quirks = {
+          wait_for_devices_delay = cfg.waitForDevices.delay;
+        };
+      })
+      {
+        splash = {
+          theme = mkDefault "night";
+          background = mkDefault "0xFF000000";
+          foreground = mkDefault "0xFFFFFFFF";
+          useBGRT    = mkDefault true;
+        };
+      }
+    ];
+  };
 }
