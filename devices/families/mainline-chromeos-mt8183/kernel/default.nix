@@ -1,19 +1,18 @@
 {
   mobile-nixos
-, fetchFromGitHub
+, fetchurl
 , fetchpatch
+, lib
 , ...
 }:
 
-mobile-nixos.kernel-builder {
-  version = "6.10.0";
+mobile-nixos.kernel-builder rec {
+  version = "6.10.6";
   configfile = ./config.aarch64;
 
-  src = fetchFromGitHub {
-    owner = "torvalds";
-    repo = "linux";
-    rev = "v6.10";
-    sha256 = "sha256-cWbH1/Ab3NqQJ1Gn/nX5koCcn1o1PexiMd5AXliNpDc=";
+  src = fetchurl {
+    url = "mirror://kernel/linux/kernel/v${lib.versions.major version}.x/linux-${version}.tar.xz";
+    hash = "sha256:1ldkf2h7ccwq2hdngxjzp96qd4vlmy3z2y8fcrsr6ngqfidhvmg0";
   };
 
   patches = [
