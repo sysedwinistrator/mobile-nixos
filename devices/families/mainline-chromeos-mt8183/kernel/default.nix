@@ -27,6 +27,7 @@ mobile-nixos.kernel-builder rec {
       url = "https://github.com/torvalds/linux/commit/4cec85ca5a098fca3d49bda9976bccaca16a8876.patch";
       sha256 = "sha256-V5d1OSJro82LIWrlJ74m5xxF26dtEe7HZmoFgUX/HBc=";
     })
+    ./0001-arm64-dts-mediatek-mt8183-Add-missing-GPU-clocks.patch
   ];
 
   isModular = true;
