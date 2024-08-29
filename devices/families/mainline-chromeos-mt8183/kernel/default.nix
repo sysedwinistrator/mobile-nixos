@@ -6,14 +6,14 @@
 }:
 
 mobile-nixos.kernel-builder {
-  version = "6.5.0";
+  version = "6.10.0";
   configfile = ./config.aarch64;
 
   src = fetchFromGitHub {
     owner = "torvalds";
     repo = "linux";
-    rev = "v6.5";
-    sha256 = "sha256-qJmVSju69WcvDIbgrbtMyCi+OXUNTzNX2G+/0zwsPR4=";
+    rev = "v6.10";
+    sha256 = "sha256-cWbH1/Ab3NqQJ1Gn/nX5koCcn1o1PexiMd5AXliNpDc=";
   };
 
   patches = [
